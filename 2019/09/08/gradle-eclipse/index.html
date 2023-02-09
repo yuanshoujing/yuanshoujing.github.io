@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本文基本是一篇手把手教程，如果你看了标题之后不觉得太小儿科、又正巧闲极无聊，可以一边读一边跟着敲几个命令试试，说不定会有所收获。万一没弄成，也正好可以有借口骂一句：“什么傻X玩意儿”。正反都不亏。 其实也是偶然，前几天天气不好，想着重装一下系统，把心中的苦闷排遣排遣。你猜怎么着，装完系统发现 Jetbrains 全家桶不老好找注册码了。那两家“著名”的在线提供注册码的网站都停止服务了，只好别的地方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Eclipse 中使用 Gradle 构建多模块项目">
+<meta property="og:url" content="http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/index.html">
+<meta property="og:site_name" content="堆码志">
+<meta property="og:description" content="本文基本是一篇手把手教程，如果你看了标题之后不觉得太小儿科、又正巧闲极无聊，可以一边读一边跟着敲几个命令试试，说不定会有所收获。万一没弄成，也正好可以有借口骂一句：“什么傻X玩意儿”。正反都不亏。 其实也是偶然，前几天天气不好，想着重装一下系统，把心中的苦闷排遣排遣。你猜怎么着，装完系统发现 Jetbrains 全家桶不老好找注册码了。那两家“著名”的在线提供注册码的网站都停止服务了，只好别的地方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/idea1.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/idea2.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse1.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse2.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse3.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse4.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse5.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/idea3.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse7.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/idea4.png">
+<meta property="og:image" content="http://yuanshoujing.github.io/images/eclipse8.png">
+<meta property="article:published_time" content="2019-09-08T10:13:47.000Z">
+<meta property="article:modified_time" content="2022-08-11T06:50:37.788Z">
+<meta property="article:author" content="袁首京">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yuanshoujing.github.io/images/idea1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在 Eclipse 中使用 Gradle 构建多模块项目</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/yuanshoujing">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/01/28/Take-a-bite-of-neovim/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <!--li><a class="icon" aria-label="分享文章" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li-->
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <!--span id="i-share" class="info" style="display:none;">分享文章</span-->
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&text=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&is_video=false&description=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=在 Eclipse 中使用 Gradle 构建多模块项目&body=Check out this article: http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&name=在 Eclipse 中使用 Gradle 构建多模块项目&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&t=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B7%A5%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">初始化工程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8-IDE-%E4%B8%AD%E5%AF%BC%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">在 IDE 中导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%87%A0%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">写几行代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="toc-number">5.</span> <span class="toc-text">增加子模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E9%97%B4%E4%BE%9D%E8%B5%96"><span class="toc-number">6.</span> <span class="toc-text">模块间依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9D%97"><span class="toc-number">7.</span> <span class="toc-text">发布模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">8.</span> <span class="toc-text">结语</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        在 Eclipse 中使用 Gradle 构建多模块项目
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">袁首京</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-08T10:13:47.000Z" itemprop="datePublished">2019-09-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>本文基本是一篇手把手教程，如果你看了标题之后不觉得太小儿科、又正巧闲极无聊，可以一边读一边跟着敲几个命令试试，说不定会有所收获。万一没弄成，也正好可以有借口骂一句：“什么傻X玩意儿”。正反都不亏。</p>
+<p>其实也是偶然，前几天天气不好，想着重装一下系统，把心中的苦闷排遣排遣。你猜怎么着，装完系统发现 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/">Jetbrains</a> 全家桶不老好找注册码了。那两家“著名”的在线提供注册码的网站都停止服务了，只好别的地方一顿儿搜，到底找到能用的注册码把 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/idea">IDEA</a> 激活了。激活是激活了，可是看着熟悉的屏幕，不知为嘛，突然就“无尽的空虚涌上心间”。迷糊了好一阵儿，才想起这些年真是挺对 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/">Jetbrains</a> 不起。交往了这么久，却没舍得在她身上花过一分钱。呸，臭渣男！何况自己也算是写一点儿软件的人呢！真是越想越觉得惭愧，越想越觉得应该有所改变，应该用回 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a>。</p>
+<p>上面一段的确是在扯淡。真正的缘由其实是发现周边的兄弟们，有很多不仅没有用 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a>，也从来不曾用 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/idea">IDEA</a>。大家一直在守着 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 过日子，就象刚认识她那会儿一样。“人生若只如初见，何事秋风悲画扇”。这让我觉得我有时候确实挺事儿，随随便便用 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a> 已属不该，何况项目还不能直接在 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 中跑的起来。我觉得有必要写一点儿说明文字，解决掉这个问题。</p>
+<p>终于啰嗦完了，以下进入正题。</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>先来安装一下 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a>。在 <strong>Windows</strong> 上，可以打开 <a target="_blank" rel="noopener" href="https://cmder.net/">Cmder</a> 或 <strong>PowerShell</strong>，输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">λ scoop install gradle</span><br></pre></td></tr></table></figure>
+
+<p>如果你看到报错：**’scoop’ 不是内部或外部命令，也不是可运行的程序或批处理文件**。那就先装一下 <a target="_blank" rel="noopener" href="https://scoop.sh/">Scoop</a>，味道还可以，不骗你。</p>
+<p>在 <strong>macOS</strong> 上，也是打开终端，输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install gradle</span><br></pre></td></tr></table></figure>
+
+<p>同样，如果你看到报错：**-bash: brew: command not found**。那就先装一下 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>。<a target="_blank" rel="noopener" href="https://scoop.sh/">Scoop</a> 灵感来源于 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>，所以它的味道当然也还行。</p>
+<p>在 <strong>Linux</strong> 上安装，也是一条命令，比如 <a target="_blank" rel="noopener" href="https://www.debian.org/">Debian</a> 系:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gradle</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，随便来输个命令检查一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gradle -v</span><br></pre></td></tr></table></figure>
+
+<p>如果输出类似：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">------------------------------------------------------------</span><br><span class="line">Gradle 5.5.1</span><br><span class="line">------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Build time:   2019-07-10 20:38:12 UTC</span><br><span class="line">Revision:     3245f748c7061472da4dc184991919810f7935a5</span><br><span class="line"></span><br><span class="line">Kotlin:       1.3.31</span><br><span class="line">Groovy:       2.5.4</span><br><span class="line">Ant:          Apache Ant(TM) version 1.9.14 compiled on March 12 2019</span><br><span class="line">JVM:          1.8.0_221 (Oracle Corporation 25.221-b11)</span><br><span class="line">OS:           Mac OS X 10.12.6 x86_64</span><br></pre></td></tr></table></figure>
+
+<p>就证明是可以了。当然，也有可能在你那儿还是会报“命令未找到之类”的，基本上是环境变量未加载，把终端或命令行窗口关了，重新打开后再输入如上命令，八成就可以了。</p>
+<p><a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 你应该已经有了，这里只说一下我用的是 **eclipse-jee Version: 2019-06 (4.12.0)**，已经内置了 <a target="_blank" rel="noopener" href="http://marketplace.eclipse.org/content/buildship-gradle-integration">Buildship</a> 插件。请检查你的 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 是否安装了此插件，如果没有，请自行安装一下。此外，如果你的 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 版本过低，小于 **2018-12 (4.10)**，可能首先需要升级一下 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a>。</p>
+<h2 id="初始化工程"><a href="#初始化工程" class="headerlink" title="初始化工程"></a>初始化工程</h2><p>正式开始之前先来个约定，从此处开始，我将不再区分操作系统环境。也就是说，以下的命令同时适用于 <strong>Windows</strong>、<strong>macOS</strong> 和 <strong>Linux</strong>。有一个小小的前题，就是假如你用的是 <strong>Windows</strong>，那么请你使用 <a target="_blank" rel="noopener" href="https://cmder.net/">Cmder</a> 或 <strong>PowerShell</strong> 来操作，而不要使用那个**命令提示符(CMD)**。</p>
+<p>先来建个工程目录，并切换进去：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> gradle_demo</span><br><span class="line">$ <span class="built_in">cd</span> gradle_demo</span><br></pre></td></tr></table></figure>
+
+<p>接着初始化工程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gradle init</span><br></pre></td></tr></table></figure>
+
+<p>会有如下输出。遇到提示可以读一读，我这里就一路回车执行过去。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Select <span class="built_in">type</span> of project to generate:</span><br><span class="line">  1: basic</span><br><span class="line">  2: application</span><br><span class="line">  3: library</span><br><span class="line">  4: Gradle plugin</span><br><span class="line">Enter selection (default: basic) [1..4] </span><br><span class="line"></span><br><span class="line">Select build script DSL:</span><br><span class="line">  1: Groovy</span><br><span class="line">  2: Kotlin</span><br><span class="line">Enter selection (default: Groovy) [1..2] </span><br><span class="line"></span><br><span class="line">Project name (default: gradle_demo): </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; Task :init</span><br><span class="line">Get more <span class="built_in">help</span> with your project: https://guides.gradle.org/creating-new-gradle-builds</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL <span class="keyword">in</span> 6s</span><br><span class="line">2 actionable tasks: 2 executed </span><br></pre></td></tr></table></figure>
+
+<p>然后看一眼我们现在的目录结构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tree</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">├── build.gradle</span><br><span class="line">├── gradle</span><br><span class="line">│   └── wrapper</span><br><span class="line">│       ├── gradle-wrapper.jar</span><br><span class="line">│       └── gradle-wrapper.properties</span><br><span class="line">├── gradlew</span><br><span class="line">├── gradlew.bat</span><br><span class="line">└── settings.gradle</span><br></pre></td></tr></table></figure>
+
+<p>很干净，我们接着来一点点完善。先来按约定加上源代码目录和测试目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> -p src/main/java</span><br><span class="line">$ <span class="built_in">mkdir</span> -p src/test/java</span><br></pre></td></tr></table></figure>
+
+<p>现在的目录结构是这个样子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">├── build.gradle</span><br><span class="line">├── gradle</span><br><span class="line">│   └── wrapper</span><br><span class="line">│       ├── gradle-wrapper.jar</span><br><span class="line">│       └── gradle-wrapper.properties</span><br><span class="line">├── gradlew</span><br><span class="line">├── gradlew.bat</span><br><span class="line">├── settings.gradle</span><br><span class="line">└── src</span><br><span class="line">    ├── main</span><br><span class="line">    │   └── java</span><br><span class="line">    └── test</span><br><span class="line">        └── java</span><br></pre></td></tr></table></figure>
+
+<p>我知道你不喜欢命令行，别着急、马上就好、不骗你。再来改一个文件，使用你习惯的编辑器，打开 <strong>build.gradle</strong>，改成这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &quot;java&quot;</span><br></pre></td></tr></table></figure>
+
+<p>删除了文件中原来的注释，加了一行代码。然后输入如下命令试一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gradle build</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BUILD SUCCESSFUL in 829ms</span><br><span class="line">1 actionable task: 1 up-to-date</span><br></pre></td></tr></table></figure>
+
+<p>很好，那么接下来，要起飞了！</p>
+<h2 id="在-IDE-中导入"><a href="#在-IDE-中导入" class="headerlink" title="在 IDE 中导入"></a>在 <strong>IDE</strong> 中导入</h2><p>听你的，这一节就不在命令行中“装13”了，下一节再装。</p>
+<p>如果你有 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/idea">IDEA</a>，打开吧。然后导入工程，注意如下图选择 <strong>Gradle</strong>：</p>
+<p><img src="/images/idea1.png"></p>
+<p>然后一路 <strong>Next</strong> 就好了。最终是这个样子：</p>
+<p><img src="/images/idea2.png"></p>
+<p>找到右侧 gradle_demo -&gt; Tasks -&gt; build，双击，不出意外的话，会正常构建成功的。</p>
+<p><a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 也是一样。执行工程导入，如下图：</p>
+<p><img src="/images/eclipse1.png"></p>
+<p>一路 <strong>Next</strong> 到这里，红色圈中的部分你当然要选你对应的工程目录：</p>
+<p><img src="/images/eclipse2.png"></p>
+<p>点 <strong>Finish</strong> 之后大概是这个样子：</p>
+<p><img src="/images/eclipse3.png"></p>
+<p>“非礼勿视”，请自行忽略马赛克。在右下方的 <strong>Gradle Tasks</strong> 中找到 gradle_demo -&gt; Tasks -&gt; build，双击，不出意外的话，也是会正常构建成功的。</p>
+<h2 id="写几行代码"><a href="#写几行代码" class="headerlink" title="写几行代码"></a>写几行代码</h2><p>在 <strong>src&#x2F;test&#x2F;java</strong> 下新建个包 <strong>com.example.gradle</strong>，然后再建个类 <strong>Greeter</strong>。建完后 <strong>src</strong> 下目录结构是这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">├── main</span><br><span class="line">│   └── java</span><br><span class="line">└── test</span><br><span class="line">    └── java</span><br><span class="line">│       └── com</span><br><span class="line">│           └── example</span><br><span class="line">│               └── gradle</span><br><span class="line">│                   └── Greeter.java</span><br></pre></td></tr></table></figure>
+
+<p><strong>Greeter</strong> 中随便写些代码，比如我的是个 <em>Hello world</em>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.gradle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;--&gt; Hello world!&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行一下看，肯定不会有什么问题。但如果只是这样，要 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a> 干吗使？所以接下来引入依赖管理。比如上面的代码，<strong>System.out</strong> 不老美，不如换 <strong>slf4j</strong> 试试。打开项目根目录下的 <strong>build.gradle</strong>，改成这样：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    group = <span class="string">&quot;com.example.gradle&quot;</span></span><br><span class="line">    </span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&quot;java&quot;</span></span><br><span class="line"></span><br><span class="line">    sourceCompatibility = JavaVersion.VERSION_1_8</span><br><span class="line"></span><br><span class="line">    tasks.withType(JavaCompile) &#123;</span><br><span class="line">        options.encoding = <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">        options.compilerArgs = [<span class="string">&#x27;-parameters&#x27;</span>]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">// log</span></span><br><span class="line">        compile <span class="attr">group:</span> <span class="string">&#x27;org.slf4j&#x27;</span>, <span class="attr">name:</span> <span class="string">&#x27;slf4j-api&#x27;</span>, <span class="attr">version:</span> <span class="string">&#x27;1.7.26&#x27;</span></span><br><span class="line">        compile <span class="attr">group:</span> <span class="string">&#x27;org.apache.logging.log4j&#x27;</span>, <span class="attr">name:</span> <span class="string">&#x27;log4j-slf4j-impl&#x27;</span>, <span class="attr">version:</span> <span class="string">&#x27;2.11.2&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>别忘了，最终我们是要构建一个多模块项目。所以上面这段配置描述了当前项目及其未来子模块的共同特征。我没加注释，谁还没背过两单词，你肯定能看懂。</p>
+<p>现在在你的 IDE 中刷新一下 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a>。比如在 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 中是在项目上单击右键，如下图：</p>
+<p><img src="/images/eclipse4.png"></p>
+<p>刷新完成后，你会看到自动加载好的依赖，象这样：</p>
+<p><img src="/images/eclipse5.png"></p>
+<p><a target="_blank" rel="noopener" href="https://www.jetbrains.com/idea">IDEA</a> 中更方便，一旦改动 <strong>build.gradle</strong>，通常会有提示，如下图中绿色圈中的部分，直接点上面的 <strong>Import Changes</strong> 就好了。如果没有提示，也可以点图中红色圈中的刷新按纽。</p>
+<p><img src="/images/idea3.png"></p>
+<p>接着改一点儿代码，把 <strong>Greeter</strong> 改成这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.gradle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(Greeter.class);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"><span class="comment">//		System.out.println(&quot;--&gt; Hello world!&quot;);</span></span><br><span class="line">		logger.debug(<span class="string">&quot;--&gt; Hello world&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不要着急去运行，还需要添加 log4j2 的配置文件。打开 <a target="_blank" rel="noopener" href="https://cmder.net/">Cmder</a> 或 <strong>PowerShell</strong> 或终端，按约定建立配置文件目录，输入如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> -p src/main/resources</span><br><span class="line">$ <span class="built_in">mkdir</span> -p src/test/resources</span><br></pre></td></tr></table></figure>
+
+<p>之后 <strong>src</strong> 下目录结构是这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">├── main</span><br><span class="line">│   ├── java</span><br><span class="line">│   │   └── com</span><br><span class="line">│   │       └── example</span><br><span class="line">│   │           └── gradle</span><br><span class="line">│   │               └── Greeter.java</span><br><span class="line">│   └── resources</span><br><span class="line">└── test</span><br><span class="line">    ├── java</span><br><span class="line">    └── resources</span><br></pre></td></tr></table></figure>
+
+<p>接着在 <strong>src&#x2F;main&#x2F;resources</strong> 下新建一个 <strong>log4j2.xml</strong> 的文件，输入以下内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span> <span class="attr">status</span>=<span class="string">&quot;error&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appenders</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">RollingFile</span> <span class="attr">name</span>=<span class="string">&quot;RollingFile&quot;</span> <span class="attr">fileName</span>=<span class="string">&quot;logs/app.log&quot;</span></span></span><br><span class="line"><span class="tag">                     <span class="attr">filePattern</span>=<span class="string">&quot;log/$$&#123;date:yyyy-MM&#125;/app-%d&#123;MM-dd-yyyy&#125;-%i.log.gz&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">PatternLayout</span> <span class="attr">pattern</span>=<span class="string">&quot;%d&#123;yyyy-MM-dd &#x27;at&#x27; HH:mm:ss z&#125; %-5level %class&#123;36&#125; %L %M - %msg%xEx%n&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">SizeBasedTriggeringPolicy</span> <span class="attr">size</span>=<span class="string">&quot;1MB&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">RollingFile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appenders</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">loggers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">&quot;info&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;RollingFile&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">loggers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <strong>src&#x2F;test&#x2F;resources</strong> 下新建一个 <strong>log4j2-test.xml</strong>，内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Configuration</span> <span class="attr">status</span>=<span class="string">&quot;WARN&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Appenders</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Console</span> <span class="attr">name</span>=<span class="string">&quot;Console&quot;</span> <span class="attr">target</span>=<span class="string">&quot;SYSTEM_OUT&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ThresholdFilter</span> <span class="attr">level</span>=<span class="string">&quot;DEBUG&quot;</span> <span class="attr">onMatch</span>=<span class="string">&quot;ACCEPT&quot;</span> <span class="attr">onMismatch</span>=<span class="string">&quot;DENY&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">PatternLayout</span> <span class="attr">pattern</span>=<span class="string">&quot;%d&#123;HH:mm:ss.SSS&#125; [%t] %-5level %logger&#123;36&#125; - %msg%n&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Console</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Appenders</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Loggers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Root</span> <span class="attr">level</span>=<span class="string">&quot;debug&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;Console&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Loggers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>好了，现在再运行一下 <strong>Greeter</strong>。不出意外的话，会输出以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">15:43:45.937 [main] DEBUG com.example.gradle.Greeter - --&gt; Hello world</span><br></pre></td></tr></table></figure>
+
+<p>很不错，日志用起来了。</p>
+<p>还有些东西要提一下，所以接着来做实验，在 <strong>src&#x2F;main&#x2F;java</strong> 下也建个包 <strong>com.example.gradle</strong>，然后在它下面也建个类 <strong>Greeter</strong>，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.gradle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(Greeter.class);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;--&gt; Hello world&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意它与 <strong>src&#x2F;test&#x2F;java</strong> 下的<strong>同名类</strong>并不完全一样，那个是 <strong>logger.debug</strong>，这个是 <strong>logger.info</strong>，仅此而已。现在来运行一下这个 <strong>Greeter</strong>，不出意外的话，没有任何输出。但是看一眼现在的目录结构，会变成这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">├─gradle</span><br><span class="line">├─logs</span><br><span class="line">└─src</span><br></pre></td></tr></table></figure>
+
+<p>多了个 <strong>logs</strong> 目录，其中的 <strong>app.log</strong> 文件中记录了刚才的运行结果。</p>
+<p>说明了什么呢？说明运行 <strong>src&#x2F;test&#x2F;java</strong> 下的代码，会优先使用 <strong>src&#x2F;test&#x2F;resources</strong> 下的配置；运行 <strong>src&#x2F;main&#x2F;java</strong> 下的代码，则会使用 <strong>src&#x2F;main&#x2F;resources</strong> 下的配置。这样，我们就很容易把开发环境的配置与线上环境的配置区分开来，不用每次打包时都改来改去。很好，是不是？</p>
+<p>上面说的是正常情况，在 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 下可能会出现与上述描述不一致的情况。有时候明明在 <strong>debug</strong> <strong>src&#x2F;test&#x2F;java</strong> 下的代码，但就是没有正常加载 <strong>src&#x2F;test&#x2F;resources</strong> 下的配置。那该怎么办呢？可以手工修改一点儿设置。首先点那个 <strong>debug</strong> 按纽的下拉菜单，打开 <strong>Debug Configurations</strong> 窗口，象这样：</p>
+<p><img src="/images/eclipse7.png"></p>
+<p>然后就是 Classpath -&gt; User Entries -&gt; Advanced，就会弹出上图的 <strong>Advanced Options</strong>，然后选 <strong>Add Folders</strong>，手工把 <strong>src&#x2F;test&#x2F;resources</strong> 加上，然后点 <strong>Up</strong> 让它出现在 <strong>User Entries</strong> 下的最前面就可以了。</p>
+<p>这一段很无趣，我知道。所以为了缓解这种情况，我特意在上面的一幅插图中画了一只可爱的小兔子，不知道你注意到没有？好了，不要往回翻了，我随口瞎说的，我哪里会画什么可爱的小兔子？不要少女心泛滥。技术大多时候就是看起来如此板正没意思，连这样的介绍文章，想写的有趣些都几乎毫无办法。所以程序员才如此苦逼，不是吗？</p>
+<p>但既然你已经读到了这里，我敬你是一条汉子。咱们还是要继续下去，毕竟目标还未完成。到现在为止，我们只是构造了一个单模块项目，我们的目的其实是多模块项目。</p>
+<h2 id="增加子模块"><a href="#增加子模块" class="headerlink" title="增加子模块"></a>增加子模块</h2><p>回到我们“最爱”的命令行，在项目根目录（gradle_demo）下为子模块初始化目录结构：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> -p gradle_demo_domain/src/main/java</span><br><span class="line">$ <span class="built_in">cp</span> build.gradle gradle_demo_domain</span><br></pre></td></tr></table></figure>
+
+<p>完成后，gradle_demo 目录，大体如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">├─gradle_demo_domain</span><br><span class="line">│  └─src</span><br><span class="line">│      └─main</span><br><span class="line">│          └─java</span><br><span class="line">└─src</span><br><span class="line">    ├─main</span><br><span class="line">    │  ├─java</span><br><span class="line">    │  │  └─com</span><br><span class="line">    │  │      └─example</span><br><span class="line">    │  │          └─gradle</span><br><span class="line">    │  └─resources</span><br><span class="line">    └─test</span><br><span class="line">        ├─java</span><br><span class="line">        │  └─com</span><br><span class="line">        │      └─example</span><br><span class="line">        │          └─gradle</span><br><span class="line">        │              └─test</span><br><span class="line">        └─resources</span><br></pre></td></tr></table></figure>
+
+<p>现在打开 <strong>gradle_demo_domain&#x2F;build.gradle</strong> 文件，把其中的内容先清空，然后加入以下内容：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">archivesBaseName = <span class="string">&quot;gradle-demo-domain&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>接着打开项目根目录下的 <strong>settings.gradle</strong>，改成这样：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rootProject.name = <span class="string">&#x27;gradle_demo&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;gradle-demo-domain&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>好了，来输个命令测试一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gradle projects</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :projects</span><br><span class="line"></span><br><span class="line">------------------------------------------------------------</span><br><span class="line">Root project</span><br><span class="line">------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Root project &#x27;gradle_demo&#x27;</span><br><span class="line">\--- Project &#x27;:gradle-demo-domain&#x27;</span><br><span class="line"></span><br><span class="line">To see a list of the tasks of a project, run gradle &lt;project-path&gt;:tasks</span><br><span class="line">For example, try running gradle :gradle-demo-domain:tasks</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL in 810ms</span><br><span class="line">1 actionable task: 1 executed</span><br></pre></td></tr></table></figure>
+
+<p>可以看到根项目 <strong>gradle_demo</strong> 下挂了个子项目 <strong>:gradle-demo-domain</strong>。如果你之前已经把项目导入到 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/idea">IDEA</a> 中，那你现在应该能看到让你导入 gradle 变更的提示，如果没有也可以手动点 Gradle 面板的刷新按纽，之后 Gradle 面板下应该会变成这样：</p>
+<p><img src="/images/idea4.png"></p>
+<p>相应的 Project 面板也会出现相应的子模块。</p>
+<p>不巧的是，如果你现在在 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 中执行 gradle 刷新，子模块不一定能正确出现，或者子模块出现了但看不到源代码目录。所以我们还需要改点东西。重新打开项目根目录下的 <strong>settings.gradle</strong>，改成这样：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">rootProject.name = <span class="string">&#x27;gradle_demo&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;gradle-demo-domain&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(<span class="string">&#x27;:gradle-demo-domain&#x27;</span>).projectDir = <span class="keyword">new</span> <span class="keyword">File</span>(settingsDir, <span class="string">&#x27;./gradle_demo_domain&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>现在再来刷新 gradle 就应该可以在 <a target="_blank" rel="noopener" href="https://www.eclipse.org/">Eclipse</a> 中看到项目被正确加载，并且可以正常构建，如下图：</p>
+<p><img src="/images/eclipse8.png"></p>
+<p>这样的话，本篇的主旨已经完成了，其实可以 Game Over 了。但是，下课了不拖课，算什么老师？开会时不补充两点，做领导怎么好意思？“见贤思齐”，我也要再啰嗦几句！</p>
+<h2 id="模块间依赖"><a href="#模块间依赖" class="headerlink" title="模块间依赖"></a>模块间依赖</h2><p>子模块有了，那如何引用子模块中的内容呢？来做了试验，在子项目 <strong>gradle-demo-domain</strong> 的 <strong>src&#x2F;main&#x2F;java</strong> 下新建个包，比如叫 <strong>com.example.gradle.model</strong>，然后在它下面新建个类 <strong>User</strong>，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.gradle.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String address;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getAddress</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> address;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAddress</span><span class="params">(String address)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.address = address;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;来自&quot;</span> + address + <span class="string">&quot;的&quot;</span> + name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在尝试一下在之前写的 <strong>com.example.gradle.test.Greeter</strong> 中引入这个 <strong>User</strong>，肯定是不行的。那怎么弄？找到根项目 <strong>gradle_demo</strong> 下的 <strong>build.gradle</strong> 打开，把它改成这样：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    group = <span class="string">&quot;com.example.gradle&quot;</span></span><br><span class="line">    </span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&quot;java&quot;</span></span><br><span class="line"></span><br><span class="line">    sourceCompatibility = JavaVersion.VERSION_1_8</span><br><span class="line"></span><br><span class="line">    tasks.withType(JavaCompile) &#123;</span><br><span class="line">        options.encoding = <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">        options.compilerArgs = [<span class="string">&#x27;-parameters&#x27;</span>]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">// log</span></span><br><span class="line">        compile <span class="attr">group:</span> <span class="string">&#x27;org.slf4j&#x27;</span>, <span class="attr">name:</span> <span class="string">&#x27;slf4j-api&#x27;</span>, <span class="attr">version:</span> <span class="string">&#x27;1.7.26&#x27;</span></span><br><span class="line">        compile <span class="attr">group:</span> <span class="string">&#x27;org.apache.logging.log4j&#x27;</span>, <span class="attr">name:</span> <span class="string">&#x27;log4j-slf4j-impl&#x27;</span>, <span class="attr">version:</span> <span class="string">&#x27;2.11.2&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile project(<span class="string">&quot;:gradle-demo-domain&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再在根项目上刷新一下 Gradle。接着打开 <strong>com.example.gradle.test.Greeter</strong>，就会发现可以顺利引入 <strong>User</strong> 了。加几行代码试验一下，比如改成这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.gradle.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.gradle.model.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(Greeter.class);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		<span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">		user.setName(<span class="string">&quot;葡萄皮&quot;</span>);</span><br><span class="line">		user.setAddress(<span class="string">&quot;吐鲁番&quot;</span>);</span><br><span class="line">		logger.debug(<span class="string">&quot;--&gt; Hello, &#123;&#125;!&quot;</span>, user);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行一下，看到类似下面这样就 OK 了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10:40:24.030 [main] DEBUG com.example.gradle.test.Greeter - --&gt; Hello, 来自吐鲁番的葡萄皮!</span><br></pre></td></tr></table></figure>
+
+<p>别走，还有最后一个主题。</p>
+<h2 id="发布模块"><a href="#发布模块" class="headerlink" title="发布模块"></a>发布模块</h2><p>如果我们编写的是一个类库项目，可能最终需要编译打包成 <strong>jar</strong> 供其它项目使用。那比较好的方案通常是用 <a target="_blank" rel="noopener" href="https://www.sonatype.com/nexus-repository-oss">Nexus</a> 搭建一个私有依赖库，然后将 <strong>jar</strong> 发布到这个私有依赖库。在 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a> 中要完成此项任务也很方便。继续来改根项目 <strong>gradle_demo</strong> 下的 <strong>build.gradle</strong>，如下：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    group = <span class="string">&quot;com.example.gradle&quot;</span></span><br><span class="line">    </span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&quot;java&quot;</span></span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&quot;maven&quot;</span></span><br><span class="line"></span><br><span class="line">    sourceCompatibility = JavaVersion.VERSION_1_8</span><br><span class="line"></span><br><span class="line">    tasks.withType(JavaCompile) &#123;</span><br><span class="line">        options.encoding = <span class="string">&quot;UTF-8&quot;</span></span><br><span class="line">        options.compilerArgs = [<span class="string">&#x27;-parameters&#x27;</span>]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">// log</span></span><br><span class="line">        compile <span class="attr">group:</span> <span class="string">&#x27;org.slf4j&#x27;</span>, <span class="attr">name:</span> <span class="string">&#x27;slf4j-api&#x27;</span>, <span class="attr">version:</span> <span class="string">&#x27;1.7.26&#x27;</span></span><br><span class="line">        compile <span class="attr">group:</span> <span class="string">&#x27;org.apache.logging.log4j&#x27;</span>, <span class="attr">name:</span> <span class="string">&#x27;log4j-slf4j-impl&#x27;</span>, <span class="attr">version:</span> <span class="string">&#x27;2.11.2&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    configurations &#123;</span><br><span class="line">        deployerJars</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    uploadArchives &#123;</span><br><span class="line">        repositories &#123;</span><br><span class="line">            mavenDeployer &#123;</span><br><span class="line">                configuration = configurations.deployerJars</span><br><span class="line">                repository(<span class="attr">url:</span> <span class="string">&quot;http://ip:port/repository/maven-releases/&quot;</span>) &#123;</span><br><span class="line">                    authentication(<span class="attr">userName:</span> <span class="string">&quot;username&quot;</span>, <span class="attr">password:</span> <span class="string">&quot;password&quot;</span>)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile project(<span class="string">&quot;:gradle-demo-domain&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不要完全照抄，如下部分注意按你的实际情况更改：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">repository(<span class="attr">url:</span> <span class="string">&quot;http://ip:port/repository/maven-releases/&quot;</span>) &#123;</span><br><span class="line">    authentication(<span class="attr">userName:</span> <span class="string">&quot;username&quot;</span>, <span class="attr">password:</span> <span class="string">&quot;password&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在在项目根目录 <strong>gradle_demo</strong> 下输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gradle tasks</span><br></pre></td></tr></table></figure>
+
+<p>会看到输出中有如下部分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">Upload tasks</span><br><span class="line">------------</span><br><span class="line">uploadArchives - Uploads all artifacts belonging to configuration &#x27;:archives&#x27;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>试着输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gradle uploadArchives</span><br></pre></td></tr></table></figure>
+
+<p>如果你之前的仓库配置没有问题，就会看到正常编译打包并自动上传到了你的私有依赖库。生活一下子美好了很多，是不是？</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>这次是真的没了，很感谢你能读到这里。</p>
+<p>基本上，我把如何使用 Gradle 做 Java 开发，简单的描述了一遍。应该是可以解决<strong>如何做（HOW）</strong>这个问题，但是对于<strong>为什么这样（WHY）</strong>则没有过多讨论。程序员通常是学习能力很强的一个群体，相信你可以通过搜索、查资料找到答案。</p>
+<p>最后，如果发现上面的叙述中有错误的地方，可以告诉我，我找时间订正。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/yuanshoujing">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B7%A5%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">初始化工程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8-IDE-%E4%B8%AD%E5%AF%BC%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">在 IDE 中导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%87%A0%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">写几行代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="toc-number">5.</span> <span class="toc-text">增加子模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E9%97%B4%E4%BE%9D%E8%B5%96"><span class="toc-number">6.</span> <span class="toc-text">模块间依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9D%97"><span class="toc-number">7.</span> <span class="toc-text">发布模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">8.</span> <span class="toc-text">结语</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&text=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&is_video=false&description=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=在 Eclipse 中使用 Gradle 构建多模块项目&body=Check out this article: http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&title=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&name=在 Eclipse 中使用 Gradle 构建多模块项目&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yuanshoujing.github.io/2019/09/08/gradle-eclipse/&t=在 Eclipse 中使用 Gradle 构建多模块项目"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <!--a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a-->
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2023
+    袁首京
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/yuanshoujing">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
